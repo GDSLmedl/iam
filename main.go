@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"iam/endpoints"
 	"log"
@@ -18,19 +17,19 @@ func verifyConfig() error {
 		"azuread":  false,
 	}
 	if !validProviders[provider] {
-		return errors.New(fmt.Sprintf("[ERR_CONF] PROVIDER env var is not set correctly : '%s'", provider))
+		return fmt.Errorf("[ERR_CONF] PROVIDER env var is not set correctly : '%s'", provider)
 	}
 	authUrl := os.Getenv("AUTH_URL")
 	if authUrl == "" {
-		return errors.New(fmt.Sprintf("[ERR_CONF] AUTH_URL env var is not set correctly : '%s'", authUrl))
+		return fmt.Errorf("[ERR_CONF] AUTH_URL env var is not set correctly : '%s'", authUrl)
 	}
 	clientId := os.Getenv("CLIENT_ID")
 	if clientId == "" {
-		return errors.New(fmt.Sprintf("[ERR_CONF] CLIENT_ID env var is not set correctly : '%s'", clientId))
+		return fmt.Errorf("[ERR_CONF] CLIENT_ID env var is not set correctly : '%s'", clientId)
 	}
 	clientSecret := os.Getenv("CLIENT_SECRET")
 	if clientId == "" {
-		return errors.New(fmt.Sprintf("[ERR_CONF] CLIENT_SECRET env var is not set correctly : '%s'", clientSecret))
+		return fmt.Errorf("[ERR_CONF] CLIENT_SECRET env var is not set correctly : '%s'", clientSecret)
 	}
 	return nil
 }
@@ -38,7 +37,7 @@ func verifyConfig() error {
 func main() {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatalf("An error occured when loading env file : %s\n", err)
+		log.Printf("An error occured when loading env file : %s\nSkipping ...\n", err)
 	}
 	err = verifyConfig()
 	if err != nil {
