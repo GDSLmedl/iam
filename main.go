@@ -28,8 +28,8 @@ func verifyConfig() error {
 		return fmt.Errorf("[ERR_CONF] CLIENT_ID env var is not set correctly : '%s'", clientId)
 	}
 	clientSecret := os.Getenv("CLIENT_SECRET")
-	if clientId == "" {
-		return fmt.Errorf("[ERR_CONF] CLIENT_SECRET env var is not set correctly : '%s'", clientSecret)
+	if clientSecret == "" {
+		return fmt.Errorf("[ERR_CONF] CLIENT_SECRET env var is not set correctly")
 	}
 	return nil
 }
