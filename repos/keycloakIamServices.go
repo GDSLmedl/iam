@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 
+	"iam/models"
+
 	keycloak "github.com/Nerzal/gocloak/v11"
 	"github.com/gin-gonic/gin"
 )
@@ -14,7 +16,7 @@ var keycloakInstance KeycloakIamService
 var iamClient keycloak.GoCloak
 var keycloakJWT keycloak.JWT
 
-func (iamSvc KeycloakIamService) InitClient(ctx *gin.Context) IamService {
+func (iamSvc KeycloakIamService) InitClient(ctx *gin.Context) models.IamService {
 	iamClient = keycloak.NewClient(os.Getenv("AUTH_URL"))
 	jwt, err := iamClient.LoginClient(ctx, os.Getenv("CLIENT_ID"), os.Getenv("CLIENT_SECRET"), os.Getenv("AUTH_REALM"))
 	if err != nil {
@@ -26,7 +28,7 @@ func (iamSvc KeycloakIamService) InitClient(ctx *gin.Context) IamService {
 	return keycloakInstance
 }
 
-func (iamSvc KeycloakIamService) GetUsers(ctx *gin.Context) []User {
+func (iamSvc KeycloakIamService) GetUsers(ctx *gin.Context) []models.User {
 	usersK, err := iamClient.GetUsers(ctx, keycloakJWT.AccessToken, "SIWEB", keycloak.GetUsersParams{})
 	if err != nil {
 		fmt.Errorf("Could not GET Users : %s", err)
@@ -35,8 +37,8 @@ func (iamSvc KeycloakIamService) GetUsers(ctx *gin.Context) []User {
 	return convertUsers(usersK)
 }
 
-func convertUsers(usersK []*keycloak.User) []User {
-	users := make([]User, 0, len(usersK)+1)
+func convertUsers(usersK []*keycloak.User) []models.User {
+	users := make([]models.User, 0, len(usersK)+1)
 	for _, u := range usersK {
 		users = append(users, convertUser(u))
 	}
@@ -50,8 +52,8 @@ func getValueOrDefault[T any](p *T, def T) T {
 	return *p
 }
 
-func convertUser(userK *keycloak.User) User {
-	user := &User{
+func convertUser(userK *keycloak.User) models.User {
+	user := &models.User{
 		ID:        getValueOrDefault(userK.ID, ""),
 		FirstName: getValueOrDefault(userK.FirstName, ""),
 		LastName:  getValueOrDefault(userK.LastName, ""),
