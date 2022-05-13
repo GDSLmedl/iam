@@ -1,13 +1,12 @@
 package endpoints
 
 import (
-	"net/http"
+	"iam/services"
 
-	gin "github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin"
 )
 
-func getUsers(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"status": "ok",
-	})
+func GetUsers(c *gin.Context) {
+	// Call Service GetUsers
+	services.GetUsers(c)
 }
